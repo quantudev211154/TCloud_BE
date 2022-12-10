@@ -7,7 +7,6 @@ export const createJWTToken = (
 ) => {
   return sign(
     {
-      phone: user.phone,
       userId: user.id,
       ...(type === 'refreshToken' ? { tokenVersion: user.tokenVersion } : {}),
     },

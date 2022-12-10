@@ -4,6 +4,7 @@ import { hash, verify } from 'argon2'
 import { ReturnUserType } from '../types/user.type'
 import { createJWTToken } from '../utils/create-jwt-token'
 import { sendJWTRefreshToken } from '../utils/send-jwt-refresh-token'
+import { converFullUserToReturnUser } from '../utils/convert-user-to-return-user'
 
 export const login = async (req: Request, res: Response) => {
   const { phone, password } = req.body
@@ -34,16 +35,8 @@ export const login = async (req: Request, res: Response) => {
 
   sendJWTRefreshToken(res, existingUser)
 
-  const returnUser: ReturnUserType = {
-    id: existingUser.id as string,
-    fullName: existingUser.fullName,
-    avatar: existingUser.avatar as string,
-    phone: existingUser.phone,
-    createdAt: existingUser.createdAt as string,
-  }
-
   return res.status(200).json({
-    user: returnUser,
+    user: converFullUserToReturnUser(existingUser),
     accessToken: createJWTToken('accessToken', existingUser),
   })
 }
@@ -75,36 +68,28 @@ export const register = async (req: Request, res: Response) => {
     password: hashedPassword,
   }).save()
 
-  const returnUser: ReturnUserType = {
-    id: newUser.id as string,
-    fullName: newUser.fullName,
-    avatar: newUser.avatar as string,
-    phone: newUser.phone,
-    createdAt: newUser.createdAt as string,
-  }
-
   return res.status(200).json({
-    user: returnUser,
+    user: converFullUserToReturnUser(newUser),
   })
 }
 
 export const logout = async (req: Request, res: Response) => {
-  const { phone } = req.params
+  const { id } = req.params
 
-  if (!phone)
+  if (!id)
     return res.status(400).json({
       status: false,
       msg: 'Phone is missing',
     })
 
   const exisingUser = await User.findOneBy({
-    phone,
+    id,
   })
 
   if (!exisingUser)
-    return res.status(404).json({
+    return res.status(400).json({
       status: false,
-      msg: 'Phone is incorrect',
+      msg: 'User Id is incorrect',
     })
 
   exisingUser.tokenVersion = (exisingUser.tokenVersion as number) + 1
@@ -114,5 +99,29 @@ export const logout = async (req: Request, res: Response) => {
   return res.status(200).json({
     status: true,
     msg: 'Logged out',
+  })
+}
+
+export const checkExistingPhone = async (req: Request, res: Response) => {
+  const { phone } = req.params
+
+  if (!phone)
+    return res.status(400).json({
+      status: false,
+      msg: 'Phone is missing',
+    })
+
+  const existingUser = await User.findOneBy({
+    phone,
+  })
+
+  if (existingUser)
+    return res.status(400).json({
+      status: false,
+      msg: 'Phone is used by other user',
+    })
+
+  return res.status(200).json({
+    msg: 'Phone is free to register',
   })
 }

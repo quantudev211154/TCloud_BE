@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.findUserByPhone = void 0;
 const user_entity_1 = require("../entities/user.entity");
+const convert_user_to_return_user_1 = require("../utils/convert-user-to-return-user");
 const findUserByPhone = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { phone } = req.params;
     if (!phone)
@@ -26,15 +27,8 @@ const findUserByPhone = (req, res) => __awaiter(void 0, void 0, void 0, function
             status: false,
             msg: 'Not found any user has phone like this',
         });
-    const returnPayload = {
-        id: exisingUser.id,
-        avatar: exisingUser.avatar,
-        fullName: exisingUser.fullName,
-        createdAt: exisingUser.createdAt,
-        phone: exisingUser.phone,
-    };
     return res.status(200).json({
-        user: returnPayload,
+        user: (0, convert_user_to_return_user_1.converFullUserToReturnUser)(exisingUser),
     });
 });
 exports.findUserByPhone = findUserByPhone;

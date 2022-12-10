@@ -9,11 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logout = exports.register = exports.login = void 0;
+exports.checkExistingPhone = exports.logout = exports.register = exports.login = void 0;
 const user_entity_1 = require("../entities/user.entity");
 const argon2_1 = require("argon2");
 const create_jwt_token_1 = require("../utils/create-jwt-token");
 const send_jwt_refresh_token_1 = require("../utils/send-jwt-refresh-token");
+const convert_user_to_return_user_1 = require("../utils/convert-user-to-return-user");
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { phone, password } = req.body;
     if (!phone || !password)
@@ -36,15 +37,8 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             msg: 'Phone or password is incorrect',
         });
     (0, send_jwt_refresh_token_1.sendJWTRefreshToken)(res, existingUser);
-    const returnUser = {
-        id: existingUser.id,
-        fullName: existingUser.fullName,
-        avatar: existingUser.avatar,
-        phone: existingUser.phone,
-        createdAt: existingUser.createdAt,
-    };
     return res.status(200).json({
-        user: returnUser,
+        user: (0, convert_user_to_return_user_1.converFullUserToReturnUser)(existingUser),
         accessToken: (0, create_jwt_token_1.createJWTToken)('accessToken', existingUser),
     });
 });
@@ -70,32 +64,25 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         phone,
         password: hashedPassword,
     }).save();
-    const returnUser = {
-        id: newUser.id,
-        fullName: newUser.fullName,
-        avatar: newUser.avatar,
-        phone: newUser.phone,
-        createdAt: newUser.createdAt,
-    };
     return res.status(200).json({
-        user: returnUser,
+        user: (0, convert_user_to_return_user_1.converFullUserToReturnUser)(newUser),
     });
 });
 exports.register = register;
 const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { phone } = req.params;
-    if (!phone)
+    const { id } = req.params;
+    if (!id)
         return res.status(400).json({
             status: false,
             msg: 'Phone is missing',
         });
     const exisingUser = yield user_entity_1.User.findOneBy({
-        phone,
+        id,
     });
     if (!exisingUser)
-        return res.status(404).json({
+        return res.status(400).json({
             status: false,
-            msg: 'Phone is incorrect',
+            msg: 'User Id is incorrect',
         });
     exisingUser.tokenVersion = exisingUser.tokenVersion + 1;
     exisingUser.save();
@@ -105,3 +92,23 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 exports.logout = logout;
+const checkExistingPhone = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { phone } = req.params;
+    if (!phone)
+        return res.status(400).json({
+            status: false,
+            msg: 'Phone is missing',
+        });
+    const existingUser = yield user_entity_1.User.findOneBy({
+        phone,
+    });
+    if (existingUser)
+        return res.status(400).json({
+            status: false,
+            msg: 'Phone is used by other user',
+        });
+    return res.status(200).json({
+        msg: 'Phone is free to register',
+    });
+});
+exports.checkExistingPhone = checkExistingPhone;

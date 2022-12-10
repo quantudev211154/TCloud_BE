@@ -6,5 +6,6 @@ const auth_1 = require("../middleware/auth");
 const authRouter = (0, express_1.Router)();
 authRouter.post('/login', auth_controller_1.login);
 authRouter.post('/register', auth_controller_1.register);
-authRouter.get('/logout/:phone', auth_1.verifyToken, auth_controller_1.logout);
+authRouter.get('/check-existing-phone/:phone', auth_controller_1.checkExistingPhone);
+authRouter.get('/logout/:id', auth_1.verifyToken, auth_controller_1.logout);
 exports.default = authRouter;

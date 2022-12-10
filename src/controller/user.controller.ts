@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { User } from '../entities/user.entity'
 import { ReturnUserType } from '../types/user.type'
+import { converFullUserToReturnUser } from '../utils/convert-user-to-return-user'
 
 export const findUserByPhone = async (req: Request, res: Response) => {
   const { phone } = req.params
@@ -21,15 +22,7 @@ export const findUserByPhone = async (req: Request, res: Response) => {
       msg: 'Not found any user has phone like this',
     })
 
-  const returnPayload: ReturnUserType = {
-    id: exisingUser.id as string,
-    avatar: exisingUser.avatar as string,
-    fullName: exisingUser.fullName,
-    createdAt: exisingUser.createdAt as string,
-    phone: exisingUser.phone,
-  }
-
   return res.status(200).json({
-    user: returnPayload,
+    user: converFullUserToReturnUser(exisingUser),
   })
 }

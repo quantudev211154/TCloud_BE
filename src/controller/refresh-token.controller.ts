@@ -2,6 +2,8 @@ import { Request, Response } from 'express'
 import { Secret, verify } from 'jsonwebtoken'
 import { User } from '../entities/user.entity'
 import { AuthPayloadType } from '../types/auth-payload.type'
+import { ReturnUserType } from '../types/user.type'
+import { converFullUserToReturnUser } from '../utils/convert-user-to-return-user'
 import { createJWTToken } from '../utils/create-jwt-token'
 import { sendJWTRefreshToken } from '../utils/send-jwt-refresh-token'
 
@@ -36,6 +38,7 @@ export const createAndSendRefreshToken = async (
 
     return res.status(200).json({
       accessToken: createJWTToken('accessToken', existingUser),
+      user: converFullUserToReturnUser(existingUser),
     })
   } catch (error) {
     console.log(error)

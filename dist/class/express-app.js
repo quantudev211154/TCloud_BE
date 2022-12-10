@@ -16,7 +16,10 @@ class TCloudExpressApp {
         this.getExpressApp = () => this.app;
         dotenv_1.default.config();
         this.app = (0, express_1.default)();
-        this.app.use((0, cors_1.default)());
+        this.app.use((0, cors_1.default)({
+            origin: ['http://localhost:5173'],
+            credentials: true,
+        }));
         this.app.use(express_1.default.json());
         this.app.use((0, cookie_parser_1.default)());
         console.log('NOTI: Express app has already');

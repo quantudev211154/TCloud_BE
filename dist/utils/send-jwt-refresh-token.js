@@ -7,7 +7,6 @@ const sendJWTRefreshToken = (res, user) => {
         httpOnly: true,
         secure: true,
         sameSite: 'lax',
-        path: '/tcloud_refresh_token',
     });
 };
 exports.sendJWTRefreshToken = sendJWTRefreshToken;

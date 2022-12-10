@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createAndSendRefreshToken = void 0;
 const jsonwebtoken_1 = require("jsonwebtoken");
 const user_entity_1 = require("../entities/user.entity");
+const convert_user_to_return_user_1 = require("../utils/convert-user-to-return-user");
 const create_jwt_token_1 = require("../utils/create-jwt-token");
 const send_jwt_refresh_token_1 = require("../utils/send-jwt-refresh-token");
 const createAndSendRefreshToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -32,6 +33,7 @@ const createAndSendRefreshToken = (req, res) => __awaiter(void 0, void 0, void 0
         (0, send_jwt_refresh_token_1.sendJWTRefreshToken)(res, existingUser);
         return res.status(200).json({
             accessToken: (0, create_jwt_token_1.createJWTToken)('accessToken', existingUser),
+            user: (0, convert_user_to_return_user_1.converFullUserToReturnUser)(existingUser),
         });
     }
     catch (error) {

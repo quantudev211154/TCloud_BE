@@ -3,4 +3,6 @@ import { createAndSendRefreshToken } from '../controller/refresh-token.controlle
 
 const refreshTokenRoute = Router()
 
-refreshTokenRoute.get('/refresh_token', createAndSendRefreshToken)
+refreshTokenRoute.get('/tcloud_refresh_token', createAndSendRefreshToken)
+
+export default refreshTokenRoute
