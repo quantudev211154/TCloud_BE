@@ -12,7 +12,7 @@ const app = MyExpressApp.getExpressApp()
 
 const PORT = process.env.PORT || 8000
 
-app.use(`${DEFAULT_API}`, authRouter)
+app.use(`${DEFAULT_API}/auth`, authRouter)
 app.use(`${DEFAULT_API}`, refreshTokenRoute)
 app.use(`${DEFAULT_API}/user`, userRoute)
 app.use(`${DEFAULT_API}/posts`, postRoute)

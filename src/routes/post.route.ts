@@ -5,7 +5,7 @@ import { verifyToken } from '../middleware/auth'
 const postRoute = Router()
 
 postRoute.get('/:userId', verifyToken, getAllPosts)
-postRoute.post('/', verifyToken, addPost)
+postRoute.post('', verifyToken, addPost)
 postRoute.delete('/:postId', verifyToken, deletePost)
 
 export default postRoute
