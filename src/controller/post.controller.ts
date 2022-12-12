@@ -26,6 +26,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
           id: true,
           fullName: true,
           phone: true,
+          createdAt: true,
         },
       },
     })

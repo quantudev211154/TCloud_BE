@@ -34,6 +34,7 @@ const getAllPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                     id: true,
                     fullName: true,
                     phone: true,
+                    createdAt: true,
                 },
             },
         });
