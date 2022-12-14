@@ -1,9 +1,10 @@
 import { Request, Response } from 'express'
+import { PostStatusEnum } from '../entities/enums/post-status'
 import { Post } from '../entities/post.entity'
 import { User } from '../entities/user.entity'
 
 export const getAllPosts = async (req: Request, res: Response) => {
-  const { userId } = req.params
+  const { userId, status } = req.params
 
   if (!userId)
     return res.status(404).json({
@@ -17,6 +18,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
         user: {
           id: userId,
         },
+        status: !status ? PostStatusEnum.DEFAULT : (status as PostStatusEnum),
       },
       relations: {
         user: true,
@@ -44,9 +46,9 @@ export const getAllPosts = async (req: Request, res: Response) => {
 }
 
 export const addPost = async (req: Request, res: Response) => {
-  const { fileName, fileUrl, type, userId } = req.body
+  const { fileName, fileUrl, type, userId, fileSize } = req.body
 
-  if (!fileName || !fileUrl || !type || !userId)
+  if (!fileName || !fileUrl || !type || !userId || !fileSize)
     return res.status(400).json({
       status: false,
       msg: 'One of neccesary params is missing',
@@ -65,6 +67,7 @@ export const addPost = async (req: Request, res: Response) => {
     fileName,
     user: existingUser as User,
     type,
+    fileSize,
   }).save()
 
   return res.status(200).json({

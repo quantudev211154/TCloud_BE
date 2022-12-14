@@ -10,10 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletePost = exports.addPost = exports.getAllPosts = void 0;
+const post_status_1 = require("../entities/enums/post-status");
 const post_entity_1 = require("../entities/post.entity");
 const user_entity_1 = require("../entities/user.entity");
 const getAllPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId } = req.params;
+    const { userId, status } = req.params;
     if (!userId)
         return res.status(404).json({
             status: false,
@@ -25,6 +26,7 @@ const getAllPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 user: {
                     id: userId,
                 },
+                status: !status ? post_status_1.PostStatusEnum.DEFAULT : status,
             },
             relations: {
                 user: true,
@@ -52,8 +54,8 @@ const getAllPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.getAllPosts = getAllPosts;
 const addPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { fileName, fileUrl, type, userId } = req.body;
-    if (!fileName || !fileUrl || !type || !userId)
+    const { fileName, fileUrl, type, userId, fileSize } = req.body;
+    if (!fileName || !fileUrl || !type || !userId || !fileSize)
         return res.status(400).json({
             status: false,
             msg: 'One of neccesary params is missing',
@@ -69,6 +71,7 @@ const addPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         fileName,
         user: existingUser,
         type,
+        fileSize,
     }).save();
     return res.status(200).json({
         newPost,

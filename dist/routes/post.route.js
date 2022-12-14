@@ -4,7 +4,7 @@ const express_1 = require("express");
 const post_controller_1 = require("../controller/post.controller");
 const auth_1 = require("../middleware/auth");
 const postRoute = (0, express_1.Router)();
-postRoute.get('/:userId', auth_1.verifyToken, post_controller_1.getAllPosts);
+postRoute.get('/:userId/:status?', auth_1.verifyToken, post_controller_1.getAllPosts);
 postRoute.post('', auth_1.verifyToken, post_controller_1.addPost);
 postRoute.delete('/:postId', auth_1.verifyToken, post_controller_1.deletePost);
 exports.default = postRoute;
