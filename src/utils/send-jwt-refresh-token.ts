@@ -12,4 +12,5 @@ export const sendJWTRefreshToken = (res: Response, user: User) => {
       sameSite: 'lax',
     }
   )
+  console.log('Cookie set')
 }

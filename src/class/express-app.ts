@@ -12,7 +12,7 @@ class TCloudExpressApp {
     this.app = express()
     this.app.use(
       cors({
-        origin: 'https://t-cloud-fe.vercel.app',
+        origin: ['https://t-cloud-fe.vercel.app', 'http://localhost:5173'],
         credentials: true,
       })
     )
