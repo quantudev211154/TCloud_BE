@@ -8,7 +8,6 @@ const sendJWTRefreshToken = (res, user) => {
         httpOnly: true,
         secure: true,
         sameSite: true,
-        signed: true,
         maxAge: 24 * 60 * 60 * 1000,
     });
     console.log('Cookie set');

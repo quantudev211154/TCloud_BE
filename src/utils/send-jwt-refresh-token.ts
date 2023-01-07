@@ -11,7 +11,6 @@ export const sendJWTRefreshToken = (res: Response, user: User) => {
       httpOnly: true,
       secure: true,
       sameSite: true,
-      signed: true,
       maxAge: 24 * 60 * 60 * 1000,
     }
   )
