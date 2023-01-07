@@ -17,7 +17,7 @@ class TCloudExpressApp {
         dotenv_1.default.config();
         this.app = (0, express_1.default)();
         this.app.use((0, cors_1.default)({
-            origin: ['http://localhost:5173'],
+            origin: 'https://t-cloud-fe.vercel.app',
             credentials: true,
         }));
         this.app.use(express_1.default.json());
