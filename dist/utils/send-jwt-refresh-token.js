@@ -6,7 +6,6 @@ const sendJWTRefreshToken = (res, user) => {
     res.cookie(process.env.TCLOUD_REFRESH_TOKEN_NAME, (0, create_jwt_token_1.createJWTToken)('refreshToken', user), {
         path: '/',
         httpOnly: true,
-        secure: true,
         sameSite: true,
         maxAge: 24 * 60 * 60 * 1000,
     });
