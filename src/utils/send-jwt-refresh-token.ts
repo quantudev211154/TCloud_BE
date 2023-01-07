@@ -7,9 +7,8 @@ export const sendJWTRefreshToken = (res: Response, user: User) => {
     process.env.TCLOUD_REFRESH_TOKEN_NAME as string,
     createJWTToken('refreshToken', user),
     {
-      path: '/',
       httpOnly: true,
-      sameSite: true,
+      secure: true,
       maxAge: 24 * 60 * 60 * 1000,
     }
   )
